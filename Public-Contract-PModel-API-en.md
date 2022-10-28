@@ -1,8 +1,6 @@
 ## Table of Contents * [Phemex Public API](#publicapi) * [General Public API Information](#general)
 * [REST API Standards](#restapi)
   * [REST API List](#restapilist)
-    * [Market API List](#marketapilist)
-      * [Query Product Information](#queryproductinfo)
     * [Trade API List](#orderapilist)
       * [Place Order With Put Method, *Prefered*](#placeorderwithput)
       * [Place Order](#placeorder)
@@ -15,7 +13,6 @@
       * [Set Leverage](#setleverage)
       * [Set RiskLimit](#setrisklimit)
       * [Assign Position Balance](#assignpositionbalance)
-      * 
       * [Query Open Orders by Symbol](#queryopenorder)
       * [Query Closed Orders by Symbol](#queryorder)
       * [Query Order by orderID](#queryorderbyid)
@@ -538,6 +535,38 @@ POST /g-positions/assign?posBalanceRv=<posBalanceRv>&posSide=<posSide>&symbol=<s
 }
 ```
 
+<a name="queryopenorder"/>
+
+#### Query open orders by symbol
+
+* Order status includes `New`, `PartiallyFilled`, `Filled`, `Canceled`, `Rejected`, `Triggered`, `Untriggered`;
+* Open order status includes `New`, `PartiallyFilled`, `Untriggered`;
+
+* Request
+
+```
+GET /orders/activeList?symbol=<symbol>
+```
+
+| Field   | Type   | Description                                | Possible values |
+|---------|--------|--------------------------------------------|--------------|
+| symbol  | String | which symbol needs to query | [Trading symbols](#symbpricesub)  |
+
+
+* Response
+  * Full order
+
+```
+to be added
+```
+
+<a name="queryorder"/>
+
+#### Query closed orders by symbol
+
+* This API is for ***closed*** orders. For open orders, please use [open order query](#queryopenorder)
+
+* Request
 
 
 
@@ -557,8 +586,11 @@ GET /exchange/v2/orderList?symbol=<symbol>&currency=<currency>&ordStatus=<ordSta
 | limit     | Integer | Yes      | limit of resultset, max 200                                         ||
 | withCount | boolean | No       | if true, result info will contains count info.                      | true,false                                                                                                                                                                                                           |
 
-- Response
-  - sample response
+* Response
+  * sample response
+
+* Response
+  * sample response
 
 ```
 {
@@ -656,9 +688,26 @@ GET /exchange/v2/orderList?symbol=<symbol>&currency=<currency>&ordStatus=<ordSta
 }
 ```
 
+<a name="queryorderbyid"/>
+
+#### Query user order by orderID or Query user order by client order ID
+* Request
+
+to be added
+
+
+<a name="querytrade"/>
+
+#### Query user trade
+
+* Request
+
+
 ```
 GET /exchange/v2/tradingList?symbol=<symbol>&currency=<currency>&execType=<execType>&ordType=<ordType>&offset=<offset>&limit=<limit>&withCount=<withCount>
 ```
+
+
 
 | Field     | Type    | Required | Description                                    | Possible values                                                    |
 |-----------|---------|----------|------------------------------------------------|--------------------------------------------------------------------|
@@ -756,10 +805,17 @@ GET /exchange/v2/tradingList?symbol=<symbol>&currency=<currency>&execType=<execT
 }
 ```
 
-```
+
+* Possible trade types
+
+|TradeTypes| Description |
+|---------|--------------|
+| Trade | Normal trades |
+| Funding | Funding on positions |
+| AdlTrade |  Auto-delevearage trades |
+| LiqTrade | Liquidation trades |
 
 
-```
 
 <a name="mdapilist"/>
 
@@ -876,6 +932,118 @@ GET /exchange/v2/tradingList?symbol=<symbol>&currency=<currency>&execType=<execT
 
 ```
 
+<a name="querykline"/>
+
+### Query kline
+
+NOTE:
+
+1. please be noted that kline interfaces have [rate limits](https://github.com/phemex/phemex-api-docs/blob/master/Generic-API-Info.en.md#rate-limits) rule,  please check the Other group under [api groups](https://github.com/phemex/phemex-api-docs/blob/master/Generic-API-Info.en.md#api-groups)
+
+
+```
+  GET /exchange/public/md/v2/kline/last?symbol=<symbol>&resolution=<resolution>&limit=<limit>
+```
+
+| Field      | Type    | Required | Description                 | Possible values                                                                                                                                                       |
+|------------|---------|----------|-----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| symbol     | String  | Yes      | which symbol needs to query | [Trading symbols](#symbpricesub)                                                                                                                                      |
+| resolution | Integer | Yes      | Kline Interval              | MINUTE_1(60),MINUTE_5(300),MINUTE_15(900),MINUTE_30(1800),HOUR_1(3600),HOUR_4(14400),DAY_1(86400),WEEK_1(604800),MONTH_1(2592000),SEASON_1(7776000),YEAR_1(31104000)  |
+| limit      | Integer | No       | records limit               | 5                                                                                                                                                                     |
+
+
+* Response
+
+```
+{
+"code": 0,
+"msg": "OK",
+"data": {
+"total": -1,
+"rows": [[<timestamp>, <interval>, <last_close>, <open>, <high>, <low>, <close>, <volume>, <turnover>], [...]]
+}
+}
+```
+
+
+* Value of `resolution`s
+
+|resolution|Description |
+|----------|------------|
+|60|MINUTE_1|
+|300|MINUTE_5|
+|900|MINUTE_15|
+|1800|MINUTE_30|
+|3600|HOUR_1|
+|14400|HOUR_4|
+|86400|DAY_1|
+|604800|WEEK_1|
+|2592000|MONTH_1|
+|7776000|SEASON_1|
+|31104000|YEAR_1|
+
+* Value of `limit`s
+
+| limit    | Description |
+|----------|-------------|
+| 5        | limit 5     |
+| 10       | limit 10    |
+| 50      | limit 50    |
+| 100     | limit 100   |
+| 500     | limit 500   |
+| 1000    | limit 1000  |
+
+
+**NOTE**, for backward compatibility reason, phemex also provides kline query with from/to, however, this interface is **NOT** recommended.
+
+```
+GET /exchange/public/md/kline?symbol=<symbol>&to=<to>&from=<from>&resolution=<resolution>
+```
+
+
+| Field       | Type    | Required    | Description            | Possible Values                                                                                                |
+|-------------|---------|-------------|------------------------|----------------------------------------------------------------------------------------------------------------|
+|symbol       | String  | Yes         | symbol name            | BTCUSD,ETHUSD,uBTCUSD,cETHUSD,XRPUSD...                                                                        | 
+| from        | Integer | Yes         | start time in seconds  | value aligned in resolution boundary                                                                           |
+| to          | Integer | Yes         | end time in seconds    | value aligned in resolution boundary; Number of k-lines return between [`from`, `to`) should be less than 1000 | 
+| resolution  | Integer | Yes         | kline interval         | the same as described above                                                                                    |
+
+
+```
+  GET /exchange/public/md/v2/kline/last?symbol=BTCUSDT&resolution=60&limit=5
+```
+
+- Response
+  - sample response
+
+```
+    {
+    "code": 0,
+    "msg": "OK",
+    "data": {
+        "total": -1,
+        "rows": [
+            [
+                1666272300,
+                60,
+                "19213.6",
+                "19212.4",
+                "19213.6",
+                "19212.4",
+                "19213.6",
+                "0.02",
+                "384.26",
+                "BTCUSDT"
+            ]
+        ]
+      }
+    }
+```
+
+
+
+
+
 <a name="querytrade"/>
 
 #### Query Trade
@@ -919,14 +1087,14 @@ GET /exchange/v2/tradingList?symbol=<symbol>&currency=<currency>&execType=<execT
   }
   ```
 
-|Field|Type|Description|Possible values|
-|--|--|--|--|
-|timestamp|Integer|Timestamp in nanoseconds||
-|Side|String|Trade Side, Buy or Sell||
-|priceRp|String|Real trade price||
-|sizeRq|String|Real trade size||
-|sequence|Integer|current message sequence||
-|symbol|String|Contract symbol name|[Trading symbols](#symbpricesub)|
+| Field      | Type    |Description| Possible values                   |
+|------------|---------|----|-----------------------------------|
+| timestamp  | Integer |Timestamp in nanoseconds||
+| Side       | String  |Trade Side, Buy or Sell||
+| priceRp    | String  |Real trade price||
+| sizeRq     | String  |Real trade size||
+| sequence   | Integer |current message sequence||
+| symbol     | String  |Contract symbol name| [Trading symbols](#symbpricesub)  |
 
 - Sample：
 
@@ -961,51 +1129,9 @@ GET /exchange/v2/tradingList?symbol=<symbol>&currency=<currency>&execType=<execT
   }
 ```
 
-```
-  GET /exchange/public/md/v2/kline/last?symbol=<symbol>&resolution=<resolution>&limit=<limit>
-```
+<a name="query24hrsticker"/>
 
-| Field      | Type    | Required | Description                 | Possible values                                                                                                                                                       |
-|------------|---------|----------|-----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| symbol     | String  | Yes      | which symbol needs to query | [Trading symbols](#symbpricesub)                                                                                                                                      |
-| resolution | Integer | Yes      | Kline Interval              | MINUTE_1(60),MINUTE_5(300),MINUTE_15(900),MINUTE_30(1800),HOUR_1(3600),HOUR_4(14400),DAY_1(86400),WEEK_1(604800),MONTH_1(2592000),SEASON_1(7776000),YEAR_1(31104000)  |
-| limit      | Integer | No       | records limit               | 5                                                                                                                                                                     |
-
-
-```
-  GET /exchange/public/md/v2/kline/last?symbol=BTCUSDT&resolution=60&limit=5
-```
-
-- Response
-  - sample response
-
-```
-    {
-    "code": 0,
-    "msg": "OK",
-    "data": {
-        "total": -1,
-        "rows": [
-            [
-                1666272300,
-                60,
-                "19213.6",
-                "19212.4",
-                "19213.6",
-                "19212.4",
-                "19213.6",
-                "0.02",
-                "384.26",
-                "BTCUSDT"
-            ]
-        ]
-      }
-    }
-```
-
-
-
-
+to be added
 
 
 
@@ -1869,9 +1995,13 @@ On each successful subscription, DataGW will publish 24-hour ticker metrics for 
    * Price is retrieved by subscribing symbol tick.
    * all available symbols (pfr=predicated funding rate)
 
-   | symbol  | index symbol |  mark symbol  | pfr symbol   | funding rate symbol |
----------|-------------|--------------|---------------|--------------|---------------------|
-   | BTCUSD TBD | .BTC         | .MBTC         | .BTCFR       | .BTCFR8H            |
+| symbol  | index symbol  | mark symbol       | pfr symbol   | funding rate symbol |
+|---------|---------------|-------------------|---------------|--------------|
+| BTCUSDT | .BTCUSDT      | .MBTCUSDT         | .BTCUSDTFR       | .BTCUSDTFR8H            |
+| ETHUSDT | .ETHUSDT      | .METHUSDT         | .ETHUSDTFR       | .ETHUSDTFR8H            |
+| XRPUSDT | .XRPUSDT      | .MXRPUSDT         | .XRPUSDTFR       | .XRPUSDTFR8H            |
+| ADAUSDT | .ADAUSDT      | .MADAUSDT         | .ADAUSDTFR       | .ADAUSDTFR8H            |
+| SOLUSDT | .SOLUSDT      | .MSOLUSDT         | .SOLUSDTFR       | .SOLUSDTFR8H            |
 
 
 * Request
