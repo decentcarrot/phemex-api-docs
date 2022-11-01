@@ -53,7 +53,7 @@
 * Phemex provides HTTP Rest API for client to operate Orders, all endpoints return a JSON object.
 * The default Rest API base endpoint is: **https://api.phemex.com**. The High rate limit Rest API base endpoint is: **https://vapi.phemex.com**. Or for the testnet is:  **https://testnet-api.phemex.com**
 * Phemex provides WebSocket API for client to receive market data, order and position updates.
-* The WebSocket API url is: **wss://phemex.com/ws**. The High rate limit WebSocket API url is: **wss://vapi.phemex.com/ws**. Or for the testnet is:  **wss://testnet.phemex.com/ws**
+* The WebSocket API url is: **wss://phemex.com/v2/ws**. The High rate limit WebSocket API url is: **wss://vapi.phemex.com/v2/ws**. Or for the testnet is:  **wss://testnet.phemex.com/v2/ws**
 
 
 
@@ -1047,39 +1047,6 @@ GET /exchange/public/md/kline?symbol=<symbol>&to=<to>&from=<from>&resolution=<re
 | from        | Integer | Yes         | start time in seconds  | value aligned in resolution boundary                                                                           |
 | to          | Integer | Yes         | end time in seconds    | value aligned in resolution boundary; Number of k-lines return between [`from`, `to`) should be less than 1000 | 
 | resolution  | Integer | Yes         | kline interval         | the same as described above                                                                                    |
-
-
-```
-  GET /exchange/public/md/v2/kline/last?symbol=BTCUSDT&resolution=60&limit=5
-```
-
-- Response
-  - sample response
-
-```
-    {
-    "code": 0,
-    "msg": "OK",
-    "data": {
-        "total": -1,
-        "rows": [
-            [
-                1666272300,
-                60,
-                "19213.6",
-                "19212.4",
-                "19213.6",
-                "19212.4",
-                "19213.6",
-                "0.02",
-                "384.26",
-                "BTCUSDT"
-            ]
-        ]
-      }
-    }
-```
-
 
 
 
