@@ -477,10 +477,10 @@ GET /g-accounts/accountPositions?currency=<currency>&symbol=<symbol>
 PUT /g-positions/switch-pos-mode-sync?symbol=<symbol>&targetPosMode=<targetPosMode>
 ```
 
-| Field         | Type   | Required | Description                    |
-| ------------- | ------ | -------- | ------------------------------ |
-| symbol        | String | Yes      | symbol to switch position mode |
-| targetPosMode | String | Yes      | the target position mode       |
+| Field         | Type   | Required | Description                    | Possible values |
+| ------------- | ------ | -------- | ------------------------------ |-----------------|
+| symbol        | String | Yes      | symbol to switch position mode |                 |
+| targetPosMode | String | Yes      | the target position mode       | OneWay, Hedged  |
 
 * Response
 
@@ -744,7 +744,7 @@ to be added
 
 
 ```
-GET /exchange/order/v2/tradingList?symbol=<symbol>&currency=<currency>&execType=<execType>&ordType=<ordType>&offset=<offset>&limit=<limit>&withCount=<withCount>
+GET /exchange/order/v2/tradingList?symbol=<symbol>&currency=<currency>&execType=<execType>&offset=<offset>&limit=<limit>&withCount=<withCount>
 ```
 
 
