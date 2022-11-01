@@ -589,7 +589,7 @@ POST /g-positions/assign?posBalanceRv=<posBalanceRv>&posSide=<posSide>&symbol=<s
 * Request
 
 ```
-GET /orders/activeList?symbol=<symbol>
+GET /g-orders/activeList?symbol=<symbol>
 ```
 
 | Field   | Type   | Description                                | Possible values |
