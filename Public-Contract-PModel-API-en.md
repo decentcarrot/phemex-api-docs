@@ -64,33 +64,30 @@
 * HTTP Request
 
 ```
-PUT /g-orders/create?clOrdID=<clOrdID>&symbol=<symbol>&reduceOnly=<reduceOnly>&closeOnTrigger=<closeOnTrigger>&orderQty=<orderQty>&displayQty=<displayQty>&ordType=<ordType>&priceRp=<priceRp>&side=<side>&posSide=<posSide>&text=<text>&timeInForce=<timeInForce>&stopPxRp=<stopPxRp>&takeProfitRp=<takeProfitRp>&stopLossRp=<stopLossRp>&pegOffsetValueRp=<pegOffsetValueRp>&pegPriceType=<pegPriceType>&trailingStopRp=<trailingStopRp>&triggerType=<triggerType>&tpTrigger=<tpTrigger>&tpSlTs=<tpSlTs>&slTrigger=<slTrigger>
+PUT /g-orders/create?clOrdID=<clOrdID>&symbol=<symbol>&reduceOnly=<reduceOnly>&closeOnTrigger=<closeOnTrigger>&orderQtyRq=<orderQtyRq>&ordType=<ordType>&priceRp=<priceRp>&side=<side>&posSide=<posSide>&text=<text>&timeInForce=<timeInForce>&stopPxRp=<stopPxRp>&takeProfitRp=<takeProfitRp>&stopLossRp=<stopLossRp>&pegOffsetValueRp=<pegOffsetValueRp>&pegPriceType=<pegPriceType>&triggerType=<triggerType>&tpTrigger=<tpTrigger>&tpSlTs=<tpSlTs>&slTrigger=<slTrigger>
 ```
 
 | Field            | Type    | Required | Description                                                  | Possible values                                              |
 | ---------------- | ------- | -------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | clOrdID          | String  | -        | client order id, max length is 40                            |                                                              |
-| symbol           | String  | Yes      | Which symbol to place order                                  | (todo) [Trading symbols](#symbpricesub)                      |
+| symbol           | String  | Yes      | Which symbol to place order                                  | [Trading symbols](#symbpricesub)                             |
 | reduceOnly       | Boolean | -        | whether reduce position side only. Enable this flag, i.e. reduceOnly=true, position side won't change | true, false                                                  |
 | closeOnTrigger   | Boolean | -        | implicitly reduceOnly, plus cancel other orders in the same direction(side) when necessary | true, false                                                  |
-| orderQtyRq       | String  | -        | Order quantity                                               |                                                              |
-| displayQtyRq     | String  | -        |                                                              |                                                              |
-| ordType          | String  | -        | default to Limit                                             | Market, Limit, Stop, StopLimit, MarketIfTouched, LimitIfTouched |
-| priceRp          | String  | -        | Real price, required for limit order                         |                                                              |
+| orderQtyRq       | String  | -        | Order real quantity                                          | "1"                                                          |
+| ordType          | String  | -        | Order type, default to Limit                                 | Market,Limit,Stop,StopLimit,MarketIfTouched,LimitIfTouched,<br />ProtectedMarket,MarketAsLimit,StopAsLimit,<br />MarketIfTouchedAsLimit,Bracket,BoTpLimit,BoSlLimit,BoSlMarket |
+| priceRp          | String  | -        | Real price, required for limit order                         | "1"                                                          |
 | side             | String  | Yes      | Order direction, Buy or Sell                                 | Buy, Sell                                                    |
-| posSide          | String  | Yes      | Position direction                                           | Merged for oneway mode , <br />Long / Short for hedge mode   |
+| posSide          | String  | Yes      | Position direction                                           | "Merged" for oneway mode , <br />"Long" / "Short" for hedge mode |
 | text             | String  | -        | Order comments                                               |                                                              |
 | timeInForce      | String  | -        | Time in force. default to GoodTillCancel                     | GoodTillCancel, ImmediateOrCancel, FillOrKill, PostOnly      |
-| stopPxRp         | String  | -        | Trigger price for stop orders                                |                                                              |
-| takeProfitRp     | String  | -        | Scaled take profit price                                     |                                                              |
-| stopLossRp       | String  | -        | Scaled stop loss price                                       |                                                              |
-| pegOffsetValueRp | String  | -        | Trailing offset from current price. Negative value when position is long, positive when position is short |                                                              |
-| pegPriceType     | String  | -        | Trailing order price type                                    | TrailingStopPeg, TrailingTakeProfitPeg                       |
-| trailingStopRp   | String  | -        |                                                              |                                                              |
-| triggerType      | String  | -        | Trigger source, whether trigger by mark price, index price or last price | ByMarkPrice, ByLastPrice                                     |
-| tpTrigger        | String  | -        | Trigger source, by mark-price or last-price                  | ByMarkPrice, ByLastPrice                                     |
-| tpSlTs           | String  | -        |                                                              |                                                              |
-| slTrigger        | String  | -        |                                                              |                                                              |
+| stopPxRp         | String  | -        | Trigger price for stop orders                                | "1"                                                          |
+| takeProfitRp     | String  | -        | Real take profit price                                       | "1"                                                          |
+| stopLossRp       | String  | -        | Real stop loss price                                         | "1"                                                          |
+| pegOffsetValueRp | String  | -        | Trailing offset from current price. Negative value when position is long, positive when position is short | "1"                                                          |
+| pegPriceType     | String  | -        | Trailing order price type                                    | LastPeg, MidPricePeg, MarketPeg, PrimaryPeg, TrailingStopPeg, TrailingTakeProfitPeg |
+| triggerType      | String  | -        | Trigger source                                               | ByMarkPrice, ByIndexPrice, ByLastPrice, ByAskPrice, ByBidPrice, ByMarkPriceLimit, ByLastPriceLimit |
+| tpTrigger        | String  | -        | Trigger source                                               | ByMarkPrice, ByIndexPrice, ByLastPrice, ByAskPrice, ByBidPrice, ByMarkPriceLimit, ByLastPriceLimit |
+| slTrigger        | String  | -        | Trigger source                                               | ByMarkPrice, ByIndexPrice, ByLastPrice, ByAskPrice, ByBidPrice, ByMarkPriceLimit, ByLastPriceLimit |
 
 * HTTP Response:
 
@@ -98,33 +95,33 @@ PUT /g-orders/create?clOrdID=<clOrdID>&symbol=<symbol>&reduceOnly=<reduceOnly>&c
 {
   "code": 0,
   "data": {
-    "actionTimeNs": 0,
+    "actionTimeNs": 1580547265848034600,
     "bizError": 0,
-    "clOrdID": "string",
-    "closedPnlRv": "string",
-    "closedSizeRq": "string",
-    "cumQtyRq": "string",
-    "cumValueRv": "string",
-    "displayQtyRq": "string",
-    "execInst": "string",
-    "execStatus": "string",
-    "leavesQtyRq": "string",
-    "leavesValueRv": "string",
-    "ordStatus": "string",
-    "orderID": "string",
-    "orderQtyRq": "string",
-    "orderType": "string",
-    "pegOffsetValueRp": "string",
-    "pegPriceType": "string",
-    "priceRq": "string",
+    "clOrdID": "137e1928-5d25-fecd-dbd1-705ded659a4f",
+    "closedPnlRv": "1271.9",
+    "closedSizeRq": "0.01",
+    "cumQtyRq": "0.01",
+    "cumValueRv": "1271.9",
+    "displayQtyRq": "0.01",
+    "execInst": "ReduceOnly",
+    "execStatus": "Init",
+    "leavesQtyRq": "0.01",
+    "leavesValueRv": "1271.9",
+    "ordStatus": "Init",
+    "orderID": "ab90a08c-b728-4b6b-97c4-36fa497335bf",
+    "orderQtyRq": "0.01",
+    "orderType": "Limit",
+    "pegOffsetValueRp": "1271.9",
+    "pegPriceType": "LastPeg",
+    "priceRq": "98970000",
     "reduceOnly": true,
-    "side": "string",
-    "stopDirection": "string",
-    "stopPxRp": "string",
-    "symbol": "string",
-    "timeInForce": "string",
+    "side": "Sell",
+    "stopDirection": "Rising",
+    "stopPxRp": "1271.9",
+    "symbol": "BTCUSDT",
+    "timeInForce": "GoodTillCancel",
     "transactTimeNs": 0,
-    "trigger": "string"
+    "trigger": "ByMarkPrice"
   },
   "msg": "string"
 }
@@ -141,41 +138,39 @@ PUT /g-orders/create?clOrdID=<clOrdID>&symbol=<symbol>&reduceOnly=<reduceOnly>&c
 
 * HTTP Request:
 
+  Request fields are the same as [above place-order](#placeorderwithput)
+
 ```json
 POST /g-orders
 
 body:
 {
-  "clOrdID": "string",
+  "clOrdID": "137e1928-5d25-fecd-dbd1-705ded659a4f",
   "closeOnTrigger": true,
-  "displayQtyRq": "string",
+  "displayQtyRq": "0.01",
   "ordType": "Limit",
-  "orderQtyRq": "string",
-  "pegOffsetValueRp": "string",
-  "pegPriceType": "string",
-  "posSide": "string",
-  "priceRp": "string",
+  "orderQtyRq": "0.01",
+  "pegOffsetValueRp": "1271.9",
+  "pegPriceType": "LastPeg",
+  "posSide": "Long",
+  "priceRp": "1271.9",
   "reduceOnly": true,
-  "side": "string",
-  "slTrigger": "string",
-  "stopLossRp": "string",
-  "stopPxRp": "string",
-  "symbol": "string",
-  "takeProfitRp": "string",
+  "side": "Buy",
+  "slTrigger": "ByMarkPrice",
+  "stopLossRp": "1271.9",
+  "stopPxRp": "1271.9",
+  "symbol": "BTCUSDT",
+  "takeProfitRp": "1271.9",
   "text": "string",
-  "timeInForce": "Day",
-  "tpSlTs": "string",
-  "tpTrigger": "string",
-  "trailingStopRp": "string",
-  "triggerType": "string"
+  "timeInForce": "GoodTillCancel",
+  "tpTrigger": "ByMarkPrice",
+  "triggerType": "ByMarkPrice"
 }
 ```
 
-Fields are the same as [above place-order](#placeorderwithput)
-
 * Response
 
-Response is the same as [above place-order](#placeorderwithput)
+​	Response is the same as [above place-order](#placeorderwithput)
 
 
 
@@ -186,27 +181,24 @@ Response is the same as [above place-order](#placeorderwithput)
 * HTTP Request
 
 ```
-PUT /g-orders/replace?symbol=<symbol>&orderID=<orderID>&origClOrdID=<origClOrdID>&clOrdID=<clOrdID>&price=<price>&priceRp=<priceRp>&orderQtyRq=<orderQtyRq>&displayQtyRq=<displayQtyRq>&stopPxRp=<stopPxRp>&takeProfitRp=<takeProfitRp>&stopLossRp=<stopLossRp>&pegOffsetValueRp=<pegOffsetValueRp>&pegPriceType=<pegPriceType>&trailingStopRp=<trailingStopRp>&triggerType=<triggerType>&posSide=<posSide>
+PUT /g-orders/replace?symbol=<symbol>&orderID=<orderID>&origClOrdID=<origClOrdID>&clOrdID=<clOrdID>&price=<price>&priceRp=<priceRp>&orderQtyRq=<orderQtyRq>&stopPxRp=<stopPxRp>&takeProfitRp=<takeProfitRp>&stopLossRp=<stopLossRp>&pegOffsetValueRp=<pegOffsetValueRp>&pegPriceType=<pegPriceType>&triggerType=<triggerType>&posSide=<posSide>
 ```
 
-| Field            | Required | Description                     |
-| ---------------- | -------- | ------------------------------- |
-| symbol           | Yes      | order symbol, cannot be changed |
-| orderID          | Yes      | order id, cannot be changed     |
-| origClOrdID      | -        | original clOrderID              |
-| clOrdID          | -        | new clOrdID                     |
-| price            | -        | new order price                 |
-| priceRp          | -        | new order price with scale      |
-| orderQtyRq       | Yes      | new orderQty                    |
-| displayQtyRq     | Yes      |                                 |
-| stopPxRp         | Yes      | new stop price                  |
-| takeProfitRp     | Yes      | new stop profit price           |
-| stopLossRp       | Yes      | new stop loss price             |
-| pegOffsetValueRp | Yes      | New trailing offset             |
-| pegPriceType     | Yes      | New peg price type              |
-| trailingStopRp   | Yes      |                                 |
-| triggerType      | Yes      |                                 |
-| posSide          | Yes      |                                 |
+| Field            | Required | Description                           |
+| ---------------- | -------- | ------------------------------------- |
+| symbol           | Yes      | order symbol, cannot be changed       |
+| orderID          | Yes      | order id, cannot be changed           |
+| origClOrdID      | -        | original clOrderID, cannot be changed |
+| clOrdID          | -        | new clOrdID                           |
+| priceRp          | -        | new order price, real value           |
+| orderQtyRq       | Yes      | new orderQty, real value              |
+| stopPxRp         | Yes      | new stop price, real value            |
+| takeProfitRp     | Yes      | new stop profit price, real value     |
+| stopLossRp       | Yes      | new stop loss price, real value       |
+| pegOffsetValueRp | Yes      | new trailing offset, real value       |
+| pegPriceType     | Yes      | new peg price type                    |
+| triggerType      | Yes      | new triggerType                       |
+| posSide          | Yes      | posSide to check, can not be changed  |
 
 * Response
 
@@ -216,31 +208,33 @@ PUT /g-orders/replace?symbol=<symbol>&orderID=<orderID>&origClOrdID=<origClOrdID
   "data": {
     "actionTimeNs": 0,
     "bizError": 0,
-    "clOrdID": "string",
-    "closedPnlRv": "string",
-    "closedSizeRq": "string",
-    "cumQtyRq": "string",
-    "cumValueRv": "string",
-    "displayQtyRq": "string",
-    "execInst": "string",
-    "execStatus": "string",
-    "leavesQtyRq": "string",
-    "leavesValueRv": "string",
-    "ordStatus": "string",
-    "orderID": "string",
-    "orderQtyRq": "string",
-    "orderType": "string",
-    "pegOffsetValueRp": "string",
-    "pegPriceType": "string",
-    "priceRq": "string",
+    "clOrdID": "137e1928-5d25-fecd-dbd1-705ded659a4f",
+    "closedPnlRv": "1271.9",
+    "closedSizeRq": "0.01",
+    "cumQtyRq": "0.01",
+    "cumValueRv": "1271.9",
+    "displayQtyRq": "0.01",
+    "execInst": "ReduceOnly",
+    "execStatus": "Init",
+    "leavesQtyRq": "0.01",
+    "leavesValueRv": "1271.9",
+    "ordStatus": "Init",
+    "orderID": "ab90a08c-b728-4b6b-97c4-36fa497335bf",
+    "orderQtyRq": "0.01",
+    "orderType": "Limit",
+    "pegOffsetValueRp": "1271.9",
+    "pegPriceType": "LastPeg",
+    "priceRp": "1271.9",
     "reduceOnly": true,
-    "side": "string",
-    "stopDirection": "string",
-    "stopPxRp": "string",
-    "symbol": "string",
-    "timeInForce": "string",
+    "side": "Sell",
+    "stopDirection": "Rising",
+    "stopPxRp": "1271.9",
+    "symbol": "BTCUSDT",
+    "timeInForce": "GoodTillCancel",
     "transactTimeNs": 0,
-    "trigger": "string"
+    "trigger": "ByMarkPrice",
+    "takeProfitRp":"1271.9",
+    "stopLossRp":"1271.9"
   },
   "msg": "string"
 }
@@ -250,7 +244,7 @@ PUT /g-orders/replace?symbol=<symbol>&orderID=<orderID>&origClOrdID=<origClOrdID
 
 <a name="cancelsingleorder"/>
 
-#### Cancel Single Order by orderID or clOrdID
+#### Cancel Single Order by orderID
 
 * HTTP Request
 
@@ -258,39 +252,45 @@ PUT /g-orders/replace?symbol=<symbol>&orderID=<orderID>&origClOrdID=<origClOrdID
 DELETE /g-orders/cancel?orderID=<orderID>&posSide=<posSide>&symbol=<symbol>
 ```
 
+| Field   | Type   | Required | Description                  |
+| ------- | ------ | -------- | ---------------------------- |
+| orderID | String | Yes      | order id, cannot be changed  |
+| symbol  | String | Yes      | which symbol to cancel order |
+| posSide | String | Yes      | position direction           |
+
 * Response
 
 ```json
 {
   "code": 0,
   "data": {
-    "actionTimeNs": 0,
+    "actionTimeNs": 450000000,
     "bizError": 0,
-    "clOrdID": "string",
-    "closedPnlRv": "string",
-    "closedSizeRq": "string",
-    "cumQtyRq": "string",
-    "cumValueRv": "string",
-    "displayQtyRq": "string",
-    "execInst": "string",
-    "execStatus": "string",
-    "leavesQtyRq": "string",
-    "leavesValueRv": "string",
-    "ordStatus": "string",
-    "orderID": "string",
-    "orderQtyRq": "string",
-    "orderType": "string",
-    "pegOffsetValueRp": "string",
-    "pegPriceType": "string",
-    "priceRq": "string",
+    "clOrdID": "137e1928-5d25-fecd-dbd1-705ded659a4f",
+    "closedPnlRv": "1271.9",
+    "closedSizeRq": "0.01",
+    "cumQtyRq": "0.01",
+    "cumValueRv": "1271.9",
+    "displayQtyRq": "0.01",
+    "execInst": "ReduceOnly",
+    "execStatus": "Init",
+    "leavesQtyRq": "0.01",
+    "leavesValueRv": "0.01",
+    "ordStatus": "Init",
+    "orderID": "ab90a08c-b728-4b6b-97c4-36fa497335bf",
+    "orderQtyRq": "0.01",
+    "orderType": "Limit",
+    "pegOffsetValueRp": "1271.9",
+    "pegPriceType": "LastPeg",
+    "priceRq": "0.01",
     "reduceOnly": true,
-    "side": "string",
-    "stopDirection": "string",
-    "stopPxRp": "string",
-    "symbol": "string",
-    "timeInForce": "string",
-    "transactTimeNs": 0,
-    "trigger": "string"
+    "side": "Sell",
+    "stopDirection": "Rising",
+    "stopPxRp": "0.01",
+    "symbol": "BTCUSDT",
+    "timeInForce": "GoodTillCancel",
+    "transactTimeNs": 450000000,
+    "trigger": "ByMarkPrice"
   },
   "msg": "string"
 }
@@ -308,39 +308,45 @@ DELETE /g-orders/cancel?orderID=<orderID>&posSide=<posSide>&symbol=<symbol>
 DELETE /g-orders?symbol=<symbol>&orderID=<orderID1>,<orderID2>,<orderID3>&posSide=<posSide>
 ```
 
+| Field   | Type   | Required | Description                                          |
+| ------- | ------ | -------- | ---------------------------------------------------- |
+| orderID | String | Yes      | list of order ids to be cancelled, cannot be changed |
+| symbol  | String | Yes      | which symbol to cancel order                         |
+| posSide | String | Yes      | position direction                                   |
+
 * Response
 
 ```json
 {
   "code": 0,
   "data": {
-    "actionTimeNs": 0,
+    "actionTimeNs": 450000000,
     "bizError": 0,
-    "clOrdID": "string",
-    "closedPnlRv": "string",
-    "closedSizeRq": "string",
-    "cumQtyRq": "string",
-    "cumValueRv": "string",
-    "displayQtyRq": "string",
-    "execInst": "string",
-    "execStatus": "string",
-    "leavesQtyRq": "string",
-    "leavesValueRv": "string",
-    "ordStatus": "string",
-    "orderID": "string",
-    "orderQtyRq": "string",
-    "orderType": "string",
-    "pegOffsetValueRp": "string",
-    "pegPriceType": "string",
-    "priceRq": "string",
+    "clOrdID": "137e1928-5d25-fecd-dbd1-705ded659a4f",
+    "closedPnlRv": "1271.9",
+    "closedSizeRq": "0.01",
+    "cumQtyRq": "0.01",
+    "cumValueRv": "1271.9",
+    "displayQtyRq": "0.01",
+    "execInst": "ReduceOnly",
+    "execStatus": "Init",
+    "leavesQtyRq": "0.01",
+    "leavesValueRv": "1271.9",
+    "ordStatus": "Init",
+    "orderID": "ab90a08c-b728-4b6b-97c4-36fa497335bf",
+    "orderQtyRq": "0.01",
+    "orderType": "Limit",
+    "pegOffsetValueRp": "1271.9",
+    "pegPriceType": "LastPeg",
+    "priceRq": "0.01",
     "reduceOnly": true,
     "side": "string",
-    "stopDirection": "string",
-    "stopPxRp": "string",
-    "symbol": "string",
-    "timeInForce": "string",
-    "transactTimeNs": 0,
-    "trigger": "string"
+    "stopDirection": "Rising",
+    "stopPxRp": "1271.9",
+    "symbol": "BTCUSDT",
+    "timeInForce": "GoodTillCancel",
+    "transactTimeNs": 450000000,
+    "trigger": "ByMarkPrice"
   },
   "msg": "string"
 }
@@ -352,15 +358,22 @@ DELETE /g-orders?symbol=<symbol>&orderID=<orderID1>,<orderID2>,<orderID3>&posSid
 
 #### Cancel All Orders
 
+* Cancel all orders for hedge supported symbols.
 * In order to cancel all orders, include conditional order and active order, one must invoke this API twice with different arguments.
-* `untriggered=false` to cancel active order including triggerred conditional order.
-* `untriggered=true` to cancel conditional order, the order is not triggerred.
+  * `untriggered=false` to cancel active order including triggerred conditional order.
+  * `untriggered=true` to cancel conditional order, the order is not triggerred.
 
 * Request
 
 ```
 DELETE /g-orders/all?symbol=<symbol>&untriggered=<untriggered>&text=<text>
 ```
+
+| Field       | Type    | Required | Description                          |
+| ----------- | ------- | -------- | ------------------------------------ |
+| symbol      | String  | -        | list of symbols to cancel all orders |
+| untriggered | boolean | -        |                                      |
+| text        | String  | -        |                                      |
 
 * Response
 
@@ -384,6 +397,11 @@ DELETE /g-orders/all?symbol=<symbol>&untriggered=<untriggered>&text=<text>
 GET /g-accounts/accountPositions?currency=<currency>&symbol=<symbol>
 ```
 
+| Field    | Type   | Required | Description |
+| -------- | ------ | -------- | ----------- |
+| symbol   | String | -        |             |
+| currency | String | Yes      |             |
+
 * Response
 
 ```json
@@ -391,55 +409,55 @@ GET /g-accounts/accountPositions?currency=<currency>&symbol=<symbol>
   "code": 0,
   "data": {
     "account": {
-      "accountBalanceRv": "string",
-      "accountId": 0,
-      "bonusBalanceRv": "string",
-      "currency": "string",
-      "totalUsedBalanceRv": "string",
-      "userID": 0
+      "accountBalanceRv": "1271.9",
+      "accountId": 123450001,
+      "bonusBalanceRv": "1271.9",
+      "currency": "BTC",
+      "totalUsedBalanceRv": "1271.9",
+      "userID": 12345
     },
     "positions": [
       {
-        "accountID": 0,
-        "assignedPosBalanceRv": "string",
-        "avgEntryPrice": "string",
-        "avgEntryPriceRp": "string",
-        "bankruptCommRv": "string",
-        "bankruptPriceRp": "string",
-        "buyValueToCostRr": "string",
+        "accountID": 123450001,
+        "assignedPosBalanceRv": "1271.9",
+        "avgEntryPrice": "1271.9",
+        "avgEntryPriceRp": "1271.9",
+        "bankruptCommRv": "1271.9",
+        "bankruptPriceRp": "1271.9",
+        "buyValueToCostRr": "0.1",
         "crossMargin": true,
-        "cumClosedPnlRv": "string",
-        "cumFundingFeeRv": "string",
-        "cumTransactFeeRv": "string",
-        "curTermRealisedPnlRv": "string",
-        "currency": "string",
-        "deleveragePercentileRr": "string",
-        "estimatedOrdLossRv": "string",
+        "cumClosedPnlRv": "1271.9",
+        "cumFundingFeeRv": "1271.9",
+        "cumTransactFeeRv": "1271.9",
+        "curTermRealisedPnlRv": "1271.9",
+        "currency": "BTC",
+        "deleveragePercentileRr": "0.1",
+        "estimatedOrdLossRv": "1271.9",
         "execSeq": 0,
-        "initMarginReqRr": "string",
-        "lastFundingTimeNs": 0,
-        "lastTermEndTimeNs": 0,
-        "leverageRr": "string",
-        "liquidationPriceRp": "string",
-        "maintMarginReqRr": "string",
-        "makerFeeRateRr": "string",
-        "markPriceRp": "string",
-        "posCostRv": "string",
-        "posMode": "string",
-        "posSide": "string",
-        "positionMarginRv": "string",
-        "positionStatus": "string",
-        "riskLimitRv": "string",
-        "sellValueToCostRr": "string",
-        "side": "string",
-        "size": "string",
-        "symbol": "string",
-        "takerFeeRateRr": "string",
+        "initMarginReqRr": "0.1",
+        "lastFundingTimeNs": 450000000,
+        "lastTermEndTimeNs": 450000000,
+        "leverageRr": "0",
+        "liquidationPriceRp": "1271.9",
+        "maintMarginReqRr": "0.1",
+        "makerFeeRateRr": "0.1",
+        "markPriceRp": "1271.9",
+        "posCostRv": "1271.9",
+        "posMode": "Hedged",
+        "posSide": "Long",
+        "positionMarginRv": "1271.9",
+        "positionStatus": "Normal",
+        "riskLimitRv": "0.1",
+        "sellValueToCostRr": "0.1",
+        "side": "Sell",
+        "size": "0",
+        "symbol": "BTC",
+        "takerFeeRateRr": "0.1",
         "term": 0,
-        "transactTimeNs": 0,
-        "usedBalanceRv": "string",
-        "userID": 0,
-        "valueRv": "string"
+        "transactTimeNs": 450000000,
+        "usedBalanceRv": "1271.9",
+        "userID": 12345,
+        "valueRv": "1271.9"
       }
     ]
   },
@@ -458,6 +476,11 @@ GET /g-accounts/accountPositions?currency=<currency>&symbol=<symbol>
 ```
 PUT /g-positions/switch-pos-mode-sync?symbol=<symbol>&targetPosMode=<targetPosMode>
 ```
+
+| Field         | Type   | Required | Description                    |
+| ------------- | ------ | -------- | ------------------------------ |
+| symbol        | String | Yes      | symbol to switch position mode |
+| targetPosMode | String | Yes      | the target position mode       |
 
 * Response
 
@@ -478,8 +501,15 @@ PUT /g-positions/switch-pos-mode-sync?symbol=<symbol>&targetPosMode=<targetPosMo
 * Request
 
 ```
-PUT /g-positions/leverageRr?leverageRr=<leverage>&longLeverageRr=<longLeverageRr>&shortLeverageRr=<shortLeverageRr>&symbol=<symbol>
+PUT /g-positions/leverage?leverageRr=<leverage>&longLeverageRr=<longLeverageRr>&shortLeverageRr=<shortLeverageRr>&symbol=<symbol>
 ```
+
+| Field           | Type   | Required | Description                                                  |
+| --------------- | ------ | -------- | ------------------------------------------------------------ |
+| symbol          | String | Yes      | symbol to set leverage                                       |
+| leverageRr      | String | -        | new leverage value, if leverageRr exists, the position side is merged. <br />either leverageRr or longLeverageRr and shortLeverageRr should exist. |
+| longLeverageRr  | String | -        | new long leverage value, if  longLeverageRr exists, the position side is hedged.<br />either leverageRr or longLeverageRr and shortLeverageRr should exist. |
+| shortLeverageRr | String | -        | new short leverage value, if shortLeverageRr exists, the position side is hedged<br />either leverageRr or longLeverageRr and shortLeverageRr should exist. |
 
 * Response
 
@@ -503,6 +533,12 @@ PUT /g-positions/leverageRr?leverageRr=<leverage>&longLeverageRr=<longLeverageRr
 PUT /g-positions/riskLimit?posSide=<posSide>&riskLimitRv=<riskLimitRv>&symbol=<symbol>
 ```
 
+| Field       | Type   | Required | Description                        |
+| ----------- | ------ | -------- | ---------------------------------- |
+| symbol      | String | Yes      | symbol to be set risk limt         |
+| riskLimitRv | String | Yes      | real value of risk limit to be set |
+| posSide     | String | Yes      | position side to set risk limit    |
+
 * Response
 
 ```json
@@ -522,8 +558,14 @@ PUT /g-positions/riskLimit?posSide=<posSide>&riskLimitRv=<riskLimitRv>&symbol=<s
 * Request
 
 ```
-POST /g-positions/assign?posBalanceRv=<posBalanceRv>&posSide=<posSide>&symbol=<symbol>&uid=<uid>
+POST /g-positions/assign?posBalanceRv=<posBalanceRv>&posSide=<posSide>&symbol=<symbol>
 ```
+
+| Field        | Type   | Required | Description                              |
+| ------------ | ------ | -------- | ---------------------------------------- |
+| symbol       | String | Yes      | symbol to assign position balance        |
+| posSide      | String | Yes      | position side to assign position balance |
+| posBalanceRv | String | Yes      | the position balance value               |
 
 * Response
 
@@ -534,6 +576,8 @@ POST /g-positions/assign?posBalanceRv=<posBalanceRv>&posSide=<posSide>&symbol=<s
   "msg": "string"
 }
 ```
+
+
 
 <a name="queryopenorder"/>
 
@@ -569,15 +613,14 @@ to be added
 * Request
 
 
-
 ```
-GET /exchange/v2/orderList?symbol=<symbol>&currency=<currency>&ordStatus=<ordStatus>&ordType=<ordType>&start=<start>&end=<end>&offset=<offset>&limit=<limit>&withCount=<withCount>
+GET /exchange/order/v2/orderList?symbol=<symbol>&currency=<currency>&ordStatus=<ordStatus>&ordType=<ordType>&start=<start>&end=<end>&offset=<offset>&limit=<limit>&withCount=<withCount>
 ```
 
 | Field     | Type    | Required | Description                                                         | Possible values                                                                                                                                                                                                      |
-|-----------|---------|----------|---------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|----|----|----|---------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | symbol    | String  | No       | which symbol needs to query                                         | [Trading symbols](#symbpricesub)                                                                                                                                                                                     |
-| currency  | String  | No       | which currency needs to query                                       ||
+|currency|String|Yes| which currency needs to query                                       |                                                                                                                                                                                                                   |
 | ordStatus | Integer | No       | order status code list filter                                       | New(5), PartiallyFilled(6), Untriggered(1), Filled(7), Canceled(8)                                                                                                                                                   |
 | ordType   | Integer | No       | order type code list filter                                         | Market(1),Limit(2),Stop(3),StopLimit(4),MarketIfTouched(5),LimitIfTouched(6),ProtectedMarket(7),MarketAsLimit(8),StopAsLimit(9),MarketIfTouchedAsLimit(10),Bracket(11),BoTpLimit(12),BoSlLimit(13),BoSlMarket(14)    |
 | start     | Integer | Yes      | start time range, Epoch millis，available only from the last 2 month ||
@@ -586,11 +629,8 @@ GET /exchange/v2/orderList?symbol=<symbol>&currency=<currency>&ordStatus=<ordSta
 | limit     | Integer | Yes      | limit of resultset, max 200                                         ||
 | withCount | boolean | No       | if true, result info will contains count info.                      | true,false                                                                                                                                                                                                           |
 
-* Response
-  * sample response
-
-* Response
-  * sample response
+- Response
+  - sample response
 
 ```
 {
@@ -704,7 +744,7 @@ to be added
 
 
 ```
-GET /exchange/v2/tradingList?symbol=<symbol>&currency=<currency>&execType=<execType>&ordType=<ordType>&offset=<offset>&limit=<limit>&withCount=<withCount>
+GET /exchange/order/v2/tradingList?symbol=<symbol>&currency=<currency>&execType=<execType>&ordType=<ordType>&offset=<offset>&limit=<limit>&withCount=<withCount>
 ```
 
 
@@ -1131,8 +1171,43 @@ GET /exchange/public/md/kline?symbol=<symbol>&to=<to>&from=<from>&resolution=<re
 
 <a name="query24hrsticker"/>
 
-to be added
 
+```
+  GET /md/v2/ticker/24hr?symbol=<symbol>
+```
+
+|Field|Type|Required|Description| Possible values                   |
+|----|----|----|----|-----------------------------------|
+|symbol|String|Yes|which symbol needs to query| [Trading symbols](#symbpricesub)  |
+
+```
+  GET /md/v2/ticker/24hr?symbol=BTCUSDT
+```
+
+- Response
+  - sample response
+
+```
+{
+    "error": null,
+    "id": 0,
+    "result": {
+        "closeRp": "20731",
+        "fundingRateRr": "0.0001",
+        "highRp": "20818.8",
+        "indexPriceRp": "20737.09857143",
+        "lowRp": "20425.2",
+        "markPriceRp": "20737.788944",
+        "openInterestRv": "0",
+        "openRp": "20709",
+        "predFundingRateRr": "0.0001",
+        "symbol": "BTCUSDT",
+        "timestamp": 1667222412794076700,
+        "turnoverRv": "139029311.7517",
+        "volumeRq": "6747.727"
+    }
+}
+```
 
 
 <a name="wsapi"/>
@@ -1252,9 +1327,9 @@ While for client private account/position/order data, the client should send use
 
 ### Subscribe OrderBook for new Model
 
-On each successful subscription, DataGW will immediately send the current Order Book snapshot to client and all later order book updates will be published. 
+On each successful subscription, DataGW will immediately send the current Order Book snapshot to client and all later order book updates will be published.
 
-* Request 
+* Request
 ```
 {
   "id": <id>,
@@ -1280,7 +1355,7 @@ On each successful subscription, DataGW will immediately send the current Order 
 ```
 > {
   "id": 1234,
-  "method": "orderbook.subscribe",
+  "method": "orderbook_p.subscribe",
   "params": [
     "BTCUSDT"
   ]
@@ -1301,7 +1376,7 @@ On each successful subscription, DataGW will immediately send the current Order 
 DataGW publishes order book message with types: incremental, snapshot. Incremental messages are published with 20ms interval. And snapshot messages are published with 60-second interval for client self-verification.
 
 * Message Format：
- 
+
 ```
 {
   "book": {
@@ -1340,7 +1415,7 @@ DataGW publishes order book message with types: incremental, snapshot. Increment
 | sequence    | Integer | Latest message sequence |          |
 | depth       | Integer | Market depth            | 30              |
 | type        | String  | Message type            | snapshot, incremental |
-  
+
 
 * Sample：
 
@@ -1413,7 +1488,7 @@ On each successful subscription, DataGW will send the 200 history trades immedia
 ```
 > {
   "id": 1234,
-  "method": "trade.subscribe",
+  "method": "trade_p.subscribe",
   "params": [
     "BTCUSDT"
   ]
@@ -1461,7 +1536,7 @@ DataGW publishes trade message with types: incremental, snapshot. Incremental me
 | sequence  | Integer| Latest message sequence                 ||
 | symbol    | String | Contract symbol name                    ||
 | type      | String | Message type                            |snapshot, incremental |
-  
+
 
 * Sample
 ```
@@ -1520,7 +1595,7 @@ It unsubscribes all trade subscriptions or for a symbol.
 # unsubscribe all trade subsciptions for a symbol
 {
   "id": <id>,
-  "method": "trade.unsubscribe",
+  "method": "trade_p.unsubscribe",
   "params": [
     "<symbol>"
   ]
@@ -1634,7 +1709,7 @@ DataGW publishes kline message with types: incremental, snapshot. Incremental me
 | sequence   | Integer | Latest message sequence                        ||
 | symbol     | String  | Contract symbol name                           ||
 | type       | String  | Message type                                   |snapshot, incremental |
-  
+
 
 * Sample
 ```
@@ -1701,14 +1776,14 @@ It unsubscribes all kline subscriptions or for a symbol.
 # unsubscribe all Kline subscriptions
 {
   "id": <id>,
-  "method": "kline.unsubscribe",
+  "method": "kline_p.unsubscribe",
   "params": []
 }
 
 # unsubscribe all Kline subscriptions of a symbol
 {
   "id": <id>,
-  "method": "kline.unsubscribe",
+  "method": "kline_p.unsubscribe",
   "params": [
     "<symbol>"
   ]
@@ -1809,7 +1884,7 @@ AOP subscription requires the session been authorized successfully. DataGW extra
 ```
 {
   "id": <id>,
-  "method": "aop.unsubscribe",
+  "method": "aop_p.unsubscribe",
   "params": []
 }
 ```
@@ -1987,13 +2062,13 @@ On each successful subscription, DataGW will publish 24-hour ticker metrics for 
 
 ### Subscribe tick event for symbol price
 
-   * Every trading symbol has a suite of other symbols, each symbol follows same patterns,
-   i.e. `index` symbol follows a pattern `.<BASECURRENCY>`,
-        `mark` symbol follows a pattern `.M<BASECURRENCY>`,
-        predicated funding rate's symbol follows a pattern `.<BASECURRENCY>FR`,
-        while funding rate symbol follows a pattern `.<BASECURRENCY>FR8H`
-   * Price is retrieved by subscribing symbol tick.
-   * all available symbols (pfr=predicated funding rate)
+* Every trading symbol has a suite of other symbols, each symbol follows same patterns,
+  i.e. `index` symbol follows a pattern `.<BASECURRENCY>`,
+  `mark` symbol follows a pattern `.M<BASECURRENCY>`,
+  predicated funding rate's symbol follows a pattern `.<BASECURRENCY>FR`,
+  while funding rate symbol follows a pattern `.<BASECURRENCY>FR8H`
+* Price is retrieved by subscribing symbol tick.
+* all available symbols (pfr=predicated funding rate)
 
 | symbol  | index symbol  | mark symbol       | pfr symbol   | funding rate symbol |
 |---------|---------------|-------------------|---------------|--------------|
@@ -2006,7 +2081,7 @@ On each successful subscription, DataGW will publish 24-hour ticker metrics for 
 
 * Request
 
-   * The symbol in params can be replace by any symbol. 
+  * The symbol in params can be replace by any symbol.
 
 ```
 {
