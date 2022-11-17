@@ -1037,7 +1037,7 @@ NOTE:
 **NOTE**, for backward compatibility reason, phemex also provides kline query with from/to, however, this interface is **NOT** recommended.
 
 ```
-GET /exchange/public/md/kline?symbol=<symbol>&to=<to>&from=<from>&resolution=<resolution>
+GET /exchange/public/md/v2/kline/list?symbol=<symbol>&to=<to>&from=<from>&resolution=<resolution>
 ```
 
 
@@ -2030,10 +2030,10 @@ On each successful subscription, DataGW will publish 24-hour ticker metrics for 
 ### Subscribe tick event for symbol price
 
 * Every trading symbol has a suite of other symbols, each symbol follows same patterns,
-  i.e. `index` symbol follows a pattern `.<BASECURRENCY>`,
-  `mark` symbol follows a pattern `.M<BASECURRENCY>`,
-  predicated funding rate's symbol follows a pattern `.<BASECURRENCY>FR`,
-  while funding rate symbol follows a pattern `.<BASECURRENCY>FR8H`
+  i.e. `index` symbol follows a pattern `.<BASECURRENCY><QUOTECURRENCY>`,
+  `mark` symbol follows a pattern `.M<BASECURRENCY><QUOTECURRENCY>`,
+  predicated funding rate's symbol follows a pattern `.<BASECURRENCY><QUOTECURRENCY>FR`,
+  while funding rate symbol follows a pattern `.<BASECURRENCY><QUOTECURRENCY>FR8H`
 * Price is retrieved by subscribing symbol tick.
 * all available symbols (pfr=predicated funding rate)
 
@@ -2043,7 +2043,6 @@ On each successful subscription, DataGW will publish 24-hour ticker metrics for 
 | ETHUSDT | .ETHUSDT      | .METHUSDT         | .ETHUSDTFR       | .ETHUSDTFR8H            |
 | XRPUSDT | .XRPUSDT      | .MXRPUSDT         | .XRPUSDTFR       | .XRPUSDTFR8H            |
 | ADAUSDT | .ADAUSDT      | .MADAUSDT         | .ADAUSDTFR       | .ADAUSDTFR8H            |
-| SOLUSDT | .SOLUSDT      | .MSOLUSDT         | .SOLUSDTFR       | .SOLUSDTFR8H            |
 
 
 * Request
