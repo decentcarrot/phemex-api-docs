@@ -25,6 +25,11 @@
       * [Query History Trades](#queryhisttrades)
     * [Asset API List](#assetapilist)
     * [Future Data Api List](#futureDataAPIList)
+      * [Query Funding Fees History](#futureDataFundingFeesHist)
+      * [Query Orders History](#futureDataOrdersHist)
+      * [Query Orders By Ids](#futureDataOrdersByIds)
+      * [Query Trades History](#futureDataTradesHist)
+      * [Query Trading Fees History](#futureDataTradingFeesHist)
     * [Withdraw](#withdraw)
 * [Websocket API Standards](#wsapi)
   * [Session Management](#sessionmanagement)
@@ -1176,6 +1181,222 @@ GET /exchange/public/md/v2/kline/list?symbol=<symbol>&to=<to>&from=<from>&resolu
 }
 ```
 
+### Future Data API List
+
+<a name="futureDataFundingFeesHist"/>
+
+#### Query Funding Fees History
+
+* Http Request
+
+```
+GET /api-data/g-futures/funding-fees?symbol=<symbol>
+```
+
+| Field    | Type           | Required | Description               | Possible Values                 |
+|----------|----------------|----------|---------------------------|---------------------------------|
+| symbol   | String         | True     | the currency to query     | uBTCUSD ...                     |
+| offset   | Integer        | False    | page start from 0         | start from 0, default 0         |
+| limit    | Integer        | False    | page size                 | default 20, max 200             |
+
+* Response
+
+```
+[
+  {
+    "createTime": 0,
+    "currency": "string",
+    "execFeeRv": 0,
+    "execPriceRp": 0,
+    "execQtyRq": 0,
+    "execValueRv": 0,
+    "feeRateRr": 0,
+    "fundingRateRr": 0,
+    "side": "string",
+    "symbol": "string"
+  }
+]
+```
+
+<a name="futureDataOrdersHist"/>
+
+#### Query Orders History
+
+* Http Request
+
+```
+GET /api-data/g-futures/orders?symbol=<symbol>
+```
+
+| Field    | Type           | Required | Description               | Possible Values                 |
+|----------|----------------|----------|---------------------------|---------------------------------|
+| symbol   | String         | True     | the currency to query     | uBTCUSD ...                     |
+| start    | Long           | False    | start time in millisecond | default 2 days ago from the end |
+| end      | Long           | False    | end time in millisecond   | default now                     |
+| offset   | Integer        | False    | page start from 0         | start from 0, default 0         |
+| limit    | Integer        | False    | page size                 | default 20, max 200             |
+
+* Response
+
+```
+[
+  {
+    "actionTimeNs": 0,
+    "bizError": 0,
+    "clOrdID": "string",
+    "closedPnlRv": 0,
+    "closedSizeRq": 0,
+    "cumQtyRq": 0,
+    "cumValueRv": 0,
+    "displayQtyRq": 0,
+    "leavesQtyRq": 0,
+    "leavesValueRv": 0,
+    "ordStatus": "string",
+    "orderID": "string",
+    "orderQtyRq": 0,
+    "orderType": "string",
+    "priceRp": 0,
+    "reduceOnly": true,
+    "side": "string",
+    "stopDirection": "string",
+    "stopLossRp": 0,
+    "symbol": "string",
+    "takeProfitRp": 0,
+    "timeInForce": "string",
+    "transactTimeNs": 0
+  }
+]
+```
+
+<a name="futureDataOrdersByIds"/>
+
+#### Query Orders By Ids
+
+* Http Request
+
+```
+GET /api-data/g-futures/orders/by-order-id?symbol=<symbol>
+```
+
+| Field    | Type     | Required | Description            | Possible Values                                                                                                                     |
+|----------|----------|----------|------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
+| symbol   | String   | True     | the currency to query  | uBTCUSD ...                                                                                                                         |
+| orderID  | String   | False    | order id               | orderID and clOrdID can not be both empty. If both IDs are given, it will return list of orders which match both orderID or clOrdID |
+| clOrdID  | String   | False    | client order id        | refer to orderID                                                                                                                    |
+
+* Response
+
+```
+[
+  {
+    "actionTimeNs": 0,
+    "bizError": 0,
+    "clOrdID": "string",
+    "closedPnlRv": 0,
+    "closedSizeRq": 0,
+    "cumQtyRq": 0,
+    "cumValueRv": 0,
+    "displayQtyRq": 0,
+    "leavesQtyRq": 0,
+    "leavesValueRv": 0,
+    "ordStatus": "string",
+    "orderID": "string",
+    "orderQtyRq": 0,
+    "orderType": "string",
+    "priceRp": 0,
+    "reduceOnly": true,
+    "side": "string",
+    "stopDirection": "string",
+    "stopLossRp": 0,
+    "symbol": "string",
+    "takeProfitRp": 0,
+    "timeInForce": "string",
+    "transactTimeNs": 0
+  }
+]
+```
+
+<a name="futureDataTradesHist"/>
+
+#### Query Trades History
+
+* Http Request
+
+```
+GET /api-data/g-futures/trades?symbol=<symbol>
+```
+
+| Field    | Type           | Required | Description               | Possible Values                 |
+|----------|----------------|----------|---------------------------|---------------------------------|
+| symbol   | String         | True     | the currency to query     | uBTCUSD ...                     |
+| start    | Long           | False    | start time in millisecond | default 2 days ago from the end |
+| end      | Long           | False    | end time in millisecond   | default now                     |
+| offset   | Integer        | False    | page start from 0         | start from 0, default 0         |
+| limit    | Integer        | False    | page size                 | default 20, max 200             |
+
+* Response
+
+```
+[
+  {
+    "action": "string",
+    "clOrdID": "string",
+    "closedPnlRv": 0,
+    "closedSizeRq": 0,
+    "currency": "string",
+    "execFeeRv": 0,
+    "execID": "string",
+    "execPriceRp": 0,
+    "execQtyRq": 0,
+    "execStatus": "string",
+    "execValueRv": 0,
+    "feeRateRr": 0,
+    "ordType": "string",
+    "orderID": "string",
+    "orderQtyRq": 0,
+    "priceRp": 0,
+    "side": "string",
+    "symbol": "string",
+    "tradeType": "string",
+    "transactTimeNs": 0
+  }
+]
+```
+
+<a name="futureDataTradingFeesHist"/>
+
+#### Query Trading Fees History
+
+* Http Request
+
+```
+GET /api-data/g-futures/trading-fees?symbol=<symbol>
+```
+
+| Field    | Type           | Required | Description               | Possible Values                 |
+|----------|----------------|----------|---------------------------|---------------------------------|
+| symbol   | String         | True     | the currency to query     | uBTCUSD ...                     |
+| offset   | Integer        | False    | page start from 0         | start from 0, default 0         |
+| limit    | Integer        | False    | page size                 | default 20, max 200             |
+
+* Response
+
+```
+[
+  {
+    "createTime": 0,
+    "currency": "string",
+    "exchangeFeeRv": 0,
+    "id": 0,
+    "makerFeeRateRr": 0,
+    "makerValueRv": 0,
+    "symbol": "string",
+    "takerFeeRateRr": 0,
+    "takerValueRv": 0,
+    "userId": 0
+  }
+]
+```
 
 <a name="wsapi"/>
 
